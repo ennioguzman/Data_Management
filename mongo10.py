@@ -9,13 +9,13 @@ import re
 import itertools
 
 client = MongoClient('localhost', 27017)
-db = client.test_database
-collection_JSON = db.data_management_collection
+db = client.new_data
+collection_JSON3 = db.data_management_collection
 
 # Open JSON
 with open('birth_rate_and_others.json') as f:
     file_data = json.load(f)
-collection_JSON.insert(file_data)
+collection_JSON3.insert(file_data)
 
 #laod the csv file
 happiness_2007 = pd.read_csv("happiness_2017.csv")
@@ -30,15 +30,15 @@ happiness_2007_data_countries = happiness_2007.Country.tolist()
 for temp_country in happiness_2007_data_countries:
     specific_data = happiness_2007_data.loc[temp_country,:]
     for dato in range(len(rows)):
-        if temp_country=="Ecuador":
+        if temp_country=="Denmark":
             print (str(rows[dato]) + " - " + str(specific_data[dato]) + " - " + temp_country)
-            db.collection_JSON.update({'Country': temp_country}, { '$set': {rows[dato]: specific_data[dato]}  })
+        collection_JSON3.update_many({'Country Name': temp_country}, { '$set': {rows[dato]: specific_data[dato]}  })
 
     # print (temp_country)
 
-Ciao = db.collection_JSON.find({})
+Ciao = collection_JSON3.find({})
 
-with open('Ciao_Corrado.txt', 'w') as f:
+with open('Ciao_Corrado4.txt', 'w') as f:
     for row in Ciao:
         f.write("%s\n" % str(row))
     
